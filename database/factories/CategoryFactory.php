@@ -16,8 +16,9 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
+        $titulo = $this->faker->unique->word(20);
         return [
-            //
+            'titulo' => $titulo
         ];
     }
 }
