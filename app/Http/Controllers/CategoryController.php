@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Http\Resources\CategoriCollection;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
-use App\Models\Category;
 
 class CategoryController extends Controller
 {
@@ -13,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categoies = Category::all();
+        return new CategoriCollection($categoies);
     }
 
     /**
