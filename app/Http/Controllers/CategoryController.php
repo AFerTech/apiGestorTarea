@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Filters\CategoryFilter;
+use Illuminate\Http\Request;
 use App\Http\Resources\CategoriCollection;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
@@ -12,10 +14,15 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categoies = Category::all();
-        return new CategoriCollection($categoies);
+        $filter = new CategoryFilter();
+        $queryItems = $filter->transform($request);
+
+        $categories = Category::where($queryItems)->paginate(10);
+        return new CategoriCollection($categories->appends($request->query()));
+
+
     }
 
     /**

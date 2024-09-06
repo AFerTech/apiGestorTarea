@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Filters\TasksFilter;
+use Illuminate\Http\Request;
 use App\Http\Resources\TaskCollection;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -12,11 +14,17 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $tasks = Task::all();
-        return new TaskCollection($tasks);
+        $filter = new TasksFilter();
+        $queryItems = $filter->transform($request);
+        // dd($queryItems);
+        $includeCategories = $request->query('includeCategories');
+        $tasks = Task::where($queryItems);
+        if($includeCategories){
+            $tasks = $tasks->with('category');
+        }
+        return new TaskCollection($tasks->paginate(10)->appends($request->query()));
     }
 
     /**
