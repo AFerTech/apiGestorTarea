@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Filters\CategoryFilter;
 use Illuminate\Http\Request;
+use App\Filters\CategoryFilter;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CategoriCollection;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
@@ -46,7 +47,11 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        $includeTasks = request()->query('includeTasks');
+        if($includeTasks){
+            return new CategoryResource($category->loadMissing('tasks'));
+        }
+        return new CategoryResource($category);
     }
 
     /**

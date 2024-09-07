@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Filters\TasksFilter;
 use Illuminate\Http\Request;
+use App\Http\Resources\TaskResource;
 use App\Http\Resources\TaskCollection;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -40,7 +41,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        //
+        return new TaskResource(Task::create($request->all()));
     }
 
     /**
@@ -48,7 +49,13 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        $includeRelations = request()->query('includeRelations');
+        if($includeRelations){
+            return new TaskResource($task->loadMissing('category','user'));
+
+        }
+        return new TaskResource($task);
+
     }
 
     /**
