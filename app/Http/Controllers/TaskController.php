@@ -12,14 +12,11 @@ use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
         $filter = new TasksFilter();
         $queryItems = $filter->transform($request);
-        // dd($queryItems);
         $includeCategories = $request->query('includeCategories');
         $tasks = Task::where($queryItems);
         if($includeCategories){
@@ -28,57 +25,51 @@ class TaskController extends Controller
         return new TaskCollection($tasks->paginate(10)->appends($request->query()));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreTaskRequest $request)
     {
-        return new TaskResource(Task::create($request->all()));
+        return response()->json([
+            'message' => 'Task creado correctamente',
+            'status' => 201,
+            'data' =>TaskResource::make($task),
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Task $task)
     {
+
         $includeRelations = request()->query('includeRelations');
+
         if($includeRelations){
             return new TaskResource($task->loadMissing('category','user'));
-
         }
-        return new TaskResource($task);
+        return response()->json([
+            'message' => 'Task encontrada correctamente',
+            'status' => 200,
+            'data' =>TaskResource::make($task),
+        ], 200);
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        $task->update($request->all());
+        return response()->json([
+            'message' => 'Task actualizada correctamente',
+            'status' => 200,
+            'data' =>TaskResource::make($task),
+        ], 200);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Task $task)
     {
-        //
+
+        $task->delete();
+        return response()->json([
+            'message' => 'Task eliminada correctamente',
+            'status' => 200,
+            'data' =>TaskResource::make($task),
+        ], 200);
+
     }
 }
