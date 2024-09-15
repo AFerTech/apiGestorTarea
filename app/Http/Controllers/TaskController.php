@@ -28,6 +28,7 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request)
     {
+        $task = Task::create($request->all());
         return response()->json([
             'message' => 'Task creado correctamente',
             'status' => 201,
