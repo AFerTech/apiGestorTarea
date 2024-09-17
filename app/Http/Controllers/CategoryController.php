@@ -30,7 +30,7 @@ class CategoryController extends Controller
         return response()->json([
             'message' => 'Categoria creado correctamente',
             'status' => 201,
-            'date' => CategoryResource::make($category)
+            'data' => CategoryResource::make($category)
         ],201);
     }
 
@@ -53,7 +53,7 @@ class CategoryController extends Controller
         return response()->json([
             'message' => 'Categoria actualizada correctamente',
             'status' => 200,
-            'date' => CategoryResource::make($category)
+            'data' => CategoryResource::make($category)
         ],200);
     }
 
@@ -64,7 +64,7 @@ class CategoryController extends Controller
         return response()->json([
             'message' => 'Categoria eliminada correctamente',
             'satatus' => 200,
-            'date' => CategoryResource::make($category)
+            'data' => CategoryResource::make($category)
         ],200);
     }
 }
